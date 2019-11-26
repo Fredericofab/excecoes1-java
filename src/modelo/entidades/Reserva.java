@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import modelo.excecoes.MinhaException;
+
 public class Reserva {
 
 	private Integer numeroQuarto;
@@ -14,7 +16,10 @@ public class Reserva {
 	
 	public Reserva() {
 	}
-	public Reserva(Integer numeroQuarto, Date checkIn, Date checkOut) {
+	public Reserva(Integer numeroQuarto, Date checkIn, Date checkOut)  {
+		if (checkIn.getTime() >= checkOut.getTime()) {
+			throw new MinhaException("Data de check-out tem de ser posterior ao check-in");
+		} 
 		this.numeroQuarto = numeroQuarto;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
@@ -40,17 +45,16 @@ public class Reserva {
 		return TimeUnit.DAYS.convert(diferenca, TimeUnit.MILLISECONDS);
 	}
 	
-	public String atualizaDatas(Date checkIn, Date checkOut) {
+	public void atualizaDatas(Date checkIn, Date checkOut)  {
 		if (checkIn.getTime() >= checkOut.getTime()) {
-			return "Data de check-out tem de ser posterior ao check-in";
+			throw new MinhaException("Data de check-out tem de ser posterior ao check-in");
 		} 
 		Date hoje = new Date();
 		if (checkIn.getTime() < hoje.getTime() ) {
-			return "Datas tem que ser futuras";
+			throw new MinhaException("Datas tem que ser futuras");
 		}
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
-		return null;
 	}
 
 	//boa pratica, colocar o @Override sempre no método toString que existe nativamente

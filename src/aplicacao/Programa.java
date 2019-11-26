@@ -6,26 +6,25 @@ import java.util.Date;
 import java.util.Scanner;
 
 import modelo.entidades.Reserva;
+import modelo.excecoes.MinhaException;
 
 public class Programa {
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) {
 
 		Scanner sc = new Scanner(System.in);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-		System.out.print("Numero do Quarto ");
-		int numQuarto = sc.nextInt();
+		try {
+			System.out.print("Numero do Quarto ");
 
-		System.out.print("Data Check-in (dd/mm/yyyy): ");
-		Date checkIn = sdf.parse(sc.next());
-		System.out.print("Data Check-out (dd/mm/yyyy): ");
-		Date checkOut = sdf.parse(sc.next());
+			int numQuarto = sc.nextInt();
 
-		if (checkIn.getTime() >= checkOut.getTime()) {
-			System.out.println("Data de check-out tem de ser posterior ao check-in");
-		} 
-		else {
+			System.out.print("Data Check-in (dd/mm/yyyy): ");
+			Date checkIn = sdf.parse(sc.next());
+			System.out.print("Data Check-out (dd/mm/yyyy): ");
+			Date checkOut = sdf.parse(sc.next());
+
 			Reserva reserva = new Reserva(numQuarto, checkIn, checkOut);
 			System.out.println(reserva.toString());
 
@@ -36,14 +35,20 @@ public class Programa {
 			System.out.print("Data Check-out (dd/mm/yyyy): ");
 			checkOut = sdf.parse(sc.next());
 
-			String erro = reserva.atualizaDatas(checkIn, checkOut);
-			if ( erro == null) {
-				System.out.println(reserva.toString());
-			}
-			else {
-				System.out.println(erro);
-			}
-			
+			reserva.atualizaDatas(checkIn, checkOut);
+			System.out.println(reserva.toString());
+		} 
+		catch (ParseException x) {
+			System.out.println("erro de conversao de data");
+		}
+//		catch (IllegalArgumentException x) {
+//			System.out.println("erro na reserva: " + x.getMessage());
+//		}
+		catch (MinhaException x) {
+			System.out.println("erro na reserva: " + x.getMessage());
+		}
+		catch (RuntimeException x) {
+			System.out.println("erro nao esperado");
 		}
 		sc.close();
 	}
