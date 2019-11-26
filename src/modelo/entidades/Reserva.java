@@ -40,9 +40,17 @@ public class Reserva {
 		return TimeUnit.DAYS.convert(diferenca, TimeUnit.MILLISECONDS);
 	}
 	
-	public void atualizaDatas(Date checkIn, Date checkOut) {
+	public String atualizaDatas(Date checkIn, Date checkOut) {
+		if (checkIn.getTime() >= checkOut.getTime()) {
+			return "Data de check-out tem de ser posterior ao check-in";
+		} 
+		Date hoje = new Date();
+		if (checkIn.getTime() < hoje.getTime() ) {
+			return "Datas tem que ser futuras";
+		}
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
+		return null;
 	}
 
 	//boa pratica, colocar o @Override sempre no método toString que existe nativamente
